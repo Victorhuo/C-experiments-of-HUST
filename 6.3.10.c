@@ -7,7 +7,7 @@ void plus(int *a, int *b);
 int main()
 {
     int x[N] = {0}, y[N] = {0}, z[2 * N] = {0}, temp[2 * N] = {0};
-    int i = N - 1, carry = 0, lx, j;
+    int i = N - 1, carry = 0, lx, j, ly;
     while (i >= 0 && isdigit(*(x + i) = getchar()))
     {
         *(x + i--) -= '0';
@@ -20,17 +20,18 @@ int main()
     {
         *(y + i--) -= '0';
     }
+    ly = N - 1 - i;
     if (i >= 0)
         shift(y, i);
-    for (i = 0; i < lx; i++)
+    for (i = 0; i < lx + 2; i++)
     {
-        for (j = 0; j < N; j++)
+        for (j = 0; j < ly + 2; j++)
         {
 
             int t = (*(x + i)) * (*(y + j));
-            carry = (*(x + i)) * (*(y + i)) / 10;
-            temp[j + i] = carry + t % 10;
-            carry = t / 10;
+            temp[j + i] = (carry + t % 10) % 10;
+            // carry = (*(x + i)) * (*(y + i)) / 10;
+            carry = t / 10 + (carry + t % 10) / 10;
         }
         plus(temp, z);
         int b;
@@ -40,13 +41,13 @@ int main()
         }
     }
     int last;
-    for (i = 2 * N - 1; i >= 0; i++)
+    for (i = 2 * N - 1; i >= 0; i--)
     {
         if (*(z + i) != 0)
             break;
     }
     last = i;
-    for (i = 0; i < last; i++)
+    for (i = last; i >= 0; i--)
     {
         printf("%d", *(z + i));
     }
@@ -55,13 +56,13 @@ int main()
 void shift(int *a, int n)
 {
     int k, len, sft;
-    len - N - 1 - n;
+    len = N - 1 - n;
     sft = N - len;
     for (k = 0; k < len; k++)
     {
         *(a + k) = *(a + k + sft);
     }
-    for (k = 0; k < N; k++)
+    for (k = len; k < N; k++)
     {
         *(a + k) = 0;
     }
@@ -75,5 +76,9 @@ void plus(int *a, int *b)
         *(x + i) = carr + *(b + i) + *(a + i);
         carr = (*(x + i) - *(x + i) % 10) / 10;
         *(x + i) %= 10;
+    }
+    for (i = 0; i < 2 * N; i++)
+    {
+        *(b + i) = *(x + i);
     }
 }
