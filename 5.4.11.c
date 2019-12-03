@@ -1,58 +1,60 @@
 #include <stdio.h>
 #include <stdbool.h>
-void printer(bool status[][10]);
-void go(int ma[][10], bool status[][10], int, int);
-
+void printer(void);
+void go(int, int);
+int valid(int x, int y);
+int ma[][10] = {
+    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+    {0, 1, 0, 0, 1, 0, 0, 0, 0, 1},
+    {0, 0, 0, 1, 1, 0, 0, 1, 0, 1},
+    {0, 1, 1, 0, 0, 0, 1, 1, 0, 1},
+    {0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+    {1, 1, 1, 1, 1, 1, 1, 1, 0, 0}};
+bool status[6][10] = {false};
 int main()
 {
     int i = 0, j = 0;
-    bool status[6][10] = {false};
-    int ma[][10] = {
-        {0, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-        {0, 1, 0, 0, 1, 0, 0, 0, 0, 1},
-        {0, 0, 0, 1, 1, 0, 0, 1, 0, 1},
-        {0, 1, 1, 0, 0, 0, 1, 1, 0, 1},
-        {0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
-        {1, 1, 1, 1, 1, 1, 1, 1, 0, 0}};
-    go(ma, status, 0, 0);
+    go(0, 0);
     return 0;
 }
-void go(int ma[][10], bool status[][10], int x, int y)
+void go(int x, int y)
 {
     if (x == 5 && y == 9)
     {
         status[5][9] = true;
-        printer(status);
+        printer();
+        puts("");
+        status[5][9] = false;
     }
     else
     {
-        if (x + 1 < 6 && status[x + 1][y] != true && ma[x + 1][y] != 1)
+        if (valid(x + 1, y))
         {
             status[x][y] = true;
-            go(ma, status, x + 1, y);
+            go(x + 1, y);
             status[x][y] = false;
         }
-        if (y + 1 < 10 && status[x][y + 1] != true && ma[x][y + 1] != 1)
+        if (valid(x, y + 1))
         {
             status[x][y] = true;
-            go(ma, status, x, y + 1);
+            go(x, y + 1);
             status[x][y] = false;
         }
-        if (y - 1 >= 0 && status[x][y - 1] != true && ma[x][y - 1] != 1)
+        if (valid(x, y - 1))
         {
             status[x][y] = true;
-            go(ma, status, x, y - 1);
+            go(x, y - 1);
             status[x][y] = false;
         }
-        if (x - 1 >= 0 && status[x - 1][y] != true && ma[x - 1][y] != 1)
+        if (valid(x - 1, y))
         {
             status[x][y] = true;
-            go(ma, status, x - 1, y);
+            go(x - 1, y);
             status[x][y] = false;
         }
     }
 }
-void printer(bool status[][10])
+void printer(void)
 {
     int i, j;
     for (i = 0; i < 6; i++)
@@ -61,13 +63,23 @@ void printer(bool status[][10])
         {
             if (status[i][j])
             {
-                printf("x");
+                printf("x ");
+            }
+            else if (ma[i][j])
+            {
+                printf("o ");
             }
             else
             {
-                printf(" ");
+                printf("  ");
             }
         }
         printf("\n");
     }
+}
+int valid(int x, int y)
+{
+    if (x < 0 || x > 5 || y < 0 || y > 9 || status[x][y] == true || ma[x][y])
+        return 0;
+    return 1;
 }
