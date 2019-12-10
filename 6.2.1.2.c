@@ -2,7 +2,7 @@
 #include <stdlib.h> //使用了malloc函数
 #include <string.h>
 #define N 4
-void strsort(char *s[], int size)
+void strsort(char **s, int size)
 {
     char *temp;
     int i, j;
@@ -10,11 +10,11 @@ void strsort(char *s[], int size)
     {
         for (j = 0; j < size - i - 1; j++)
         {
-            if (*s[j] > *s[j + 1]) //如果s[j]比s[j+1]更大就交换
+            if (strcmp(*(s + j), *(s + j + 1))) //如果s[j]比s[j+1]更大就交换
             {
-                temp = s[j];
-                s[j] = s[j + 1];
-                s[j + 1] = temp;
+                temp = *(s + j);
+                *(s + j) = *(s + 1 + j);
+                *(s + j + 1) = temp;
             }
         }
     }
