@@ -1,37 +1,42 @@
 #include <stdio.h>
-#define SIZE 10
-void roll(int, int, int *img);
+#include <stdlib.h>
+void roll(int, int, int **);
 int main()
 {
-    int a, b;
+    int a, b, **arr; //a行数，b列数
     int i, j;
-    int img[SIZE][SIZE];
     scanf("%d %d", &a, &b);
-    for (i = 0; i < a; i++)
+    arr = (int **)malloc(sizeof(int *) * a); //分配所有行的首地址
+    for (i = 0; i < b; i++)
+    {
+        arr[i] = (int *)malloc(sizeof(int) * b); //给每一列分配内存
+    }
+    // int(*arr)[b] = (int(*)[b])malloc(sizeof(int) * a * b); //申请一个a行b列的整型数组
+    for (i = 0; i < a; i++) //读入值
     {
         for (j = 0; j < b; j++)
         {
-            scanf("%d", &img[i][j]);
+            scanf("%d", &arr[i][j]);
         }
     }
-    roll(a, b, *img);
+    roll(a, b, arr);
     return 0;
 }
-void roll(int a, int b, int *img)
+void roll(int a, int b, int *arr[])
 {
-    int img2[b][a], i, j;
-    for (i = b; i > 0; i--) //lie
+    int arr2[b][a], i, j;
+    for (j = 0; j < a; j++) //hang
     {
-        for (j = 0; j < a; j++) //hang
+        for (i = b - 1; i >= 0; i--) //lie
         {
-            img2[b - i][j] = *(img + j * SIZE + i);
+            arr2[b - 1 - i][j] = arr[j][i];
         }
     }
     for (i = 0; i < b; i++)
     {
         for (j = 0; j < a; j++)
         {
-            printf("%d ", *((img + SIZE * i) + j));
+            printf("%d ", arr2[i][j]);
         }
         puts("");
     }
