@@ -1,20 +1,11 @@
 #include <stdio.h>
-#define N 100
-void plus(int *, int *);
+#define STRING char *
+typedef char *string;
 int main()
 {
-    int a[] = {1, 2, 3};
-    int b[] = {4, 5, 6};
-    plus(a, b);
-}
-void plus(int *a, int *b)
-{
-    int i, carr = 0;
-    int x[2 * N] = {0};
-    for (i = 0; i < 2 * N; i++)
-    {
-        *(x + i) = carr + *(b + i) + *(a + i);
-        carr = (*(x + i) - *(x + i) % 10) / 10;
-        *(x + i) %= 10;
-    }
+    char e = 'a';
+    STRING a = e, b = e;
+    string c = e, d = e;
+    printf("%c %c %c %c %c", a, b, c, d, e);
+    return 0;
 }
