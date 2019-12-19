@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 void strnins(char *t, char *s, int n);
 int main()
