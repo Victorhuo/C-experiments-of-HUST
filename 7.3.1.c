@@ -15,7 +15,6 @@ int main()
         unsigned char bit0 : 1, bit1 : 1, bit2 : 1, bit3 : 1, bit4 : 1, bit5 : 1, bit6 : 1, bit7 : 1;
     };
     struct bits a = {1, 1, 1, 0, 1, 1, 1, 1};
-    int i;
     if (a.bit0 > 0)
         p_fun[0](0);
     if (a.bit1 > 0)

@@ -1,71 +1,52 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define M 8 //è¡Œ
-#define N 8 //åˆ—
-
-typedef struct snode //åæ ‡
+#define ROW 8 //ĞĞ
+#define COL 8 //ÁĞ
+struct weizhi //×ø±ê
 {
     int flag;
     int x;
     int y;
-} stack;
-typedef struct node
+};
+struct node
 {
-    int top;  //è®°å½•èµ°äº†å¤šå°‘æ­¥top+1
-    int flag; //è®°å½•ä¸Šä¸€æ­¥èµ°çš„æ–¹å‘
-    stack *p; //è·¯å¾„æ ˆ
-} LNode;
-
-LNode *CreateStacke();                //åˆ›å»ºï¼Œå¹¶åˆå§‹åŒ–
-void Judge(LNode *s, int chess[][N]); //åˆ¤æ–­å¾€å“ªèµ°
-void Push(LNode *s, stack x);         //å…¥æ ˆæ“ä½œ
-void Pop(LNode *s);                   //å‡ºæ ˆæ“ä½œ
-int IsFull(LNode *s);                 //åˆ¤æ»¡
-int IsEmpty(LNode *s);                //åˆ¤ç©º
+    int top;
+    int flag;         //¼ÇÂ¼ÉÏÒ»²½×ßµÄ·½Ïò
+    struct weizhi *p; //Â·¾¶Õ»
+};
+struct node *CreateStacke();                  //´´½¨£¬²¢³õÊ¼»¯
+void Judge(struct node *s, int chess[][COL]); //ÅĞ¶ÏÍùÄÄ×ß
+void Push(struct node *s, struct weizhi x);   //ÈëÕ»
+void Pop(struct node *s);                     //³öÕ»
+int Full(struct node *s);                     //ÅĞÂú
+int Empty(struct node *s);                    //ÅĞ¿Õ
 int main()
 {
-    int chess[M][N] = {0}; //æ£‹ç›˜
-    int i, j;              //å¾ªç¯å˜é‡
-    LNode *step;           //stepå­˜çš„æ˜¯èµ°çš„è·¯å¾„
-
+    int chess[ROW][COL] = {0}; //ÆåÅÌ
+    int i, j;
+    struct node *step; //step´æµÄÊÇ×ßµÄÂ·¾¶
     step = CreateStacke();
-
     Judge(step, chess);
-
-    for (i = 0; i < N; i++)
+    for (i = 0; i < COL; i++)
     {
-        for (j = 0; j < M; j++)
+        for (j = 0; j < ROW; j++)
         {
             printf("%2d ", chess[i][j]);
         }
         printf("\n");
     }
-
     return 0;
 }
-LNode *CreateStacke()
+struct node *CreateStacke()
 {
-    LNode *s = (LNode *)malloc(sizeof(LNode));
-
-    if (!s)
-    {
-        printf("å†…å­˜ç©ºé—´ä¸è¶³!\n");
-        system("pause");
-        exit(0);
-    }
-    s->p = (stack *)malloc(sizeof(stack) * M * N);
-    if (!s->p)
-    {
-        printf("å†…å­˜ç©ºé—´ä¸è¶³!\n");
-        system("pause");
-        exit(0);
-    }
-    s->top = -1; // æŠŠtopæ”¾åœ¨æ ˆåº•
+    struct node *s = (struct node *)malloc(sizeof(struct node));
+    s->p = (struct weizhi *)malloc(sizeof(struct weizhi) * ROW * COL);
+    s->top = -1; // °Ñtop·ÅÔÚÕ»µ×
     return s;
 }
-void Judge(LNode *s, int chess[][N])
+void Judge(struct node *s, int chess[][COL])
 {
-    int ch[8][2] = {//é©¬å¯èƒ½èµ°çš„å…«ä¸ªæ–¹å‘
+    int ch[8][2] = {//Âí¿ÉÄÜ×ßµÄ°Ë¸ö·½Ïò
                     {1, -2},
                     {2, -1},
                     {2, 1},
@@ -75,30 +56,29 @@ void Judge(LNode *s, int chess[][N])
                     {-2, -1},
                     {-1, -2}};
     int i, j = 1, flag = 1;
-    stack t;
-
-    printf("è¯·è¾“å…¥é©¬çš„åˆå§‹ä½ç½®ï¼š(%d * %d)\n", M, N);
+    struct weizhi t;
+    printf("ÇëÊäÈëÂíµÄ³õÊ¼Î»ÖÃ£º(%d * %d)\n", ROW, COL);
     scanf("%d%d", &t.y, &t.x);
-    if (t.x <= 0 || t.x > N || t.y <= 0 || t.y > N)
+    if (t.x <= 0 || t.x > COL || t.y <= 0 || t.y > COL)
     {
-        printf("è¾“å…¥çš„åæ ‡è¶…å‡ºèŒƒå›´ï¼\n");
+        printf("ÊäÈëµÄ×ø±ê³¬³ö·¶Î§£¡\n");
         exit(0);
     }
     t.x--;
     t.y--;
-    chess[t.y][t.x] = 1; //é€‰æ‹©é©¬çš„ç¬¬ä¸€ä¸ªè½è„šç‚¹
+    chess[t.y][t.x] = 1; //Ñ¡ÔñÂíµÄµÚÒ»¸öÂä½Åµã
     Push(s, t);
-    while (s->top < M * N - 1 && s->top != -1)
+    while (s->top < ROW * COL - 1 && s->top != -1)
     {
         for (i = 0; i < 8; i++)
         {
             t.x = s->p[s->top].x + ch[i][0];
             t.y = s->p[s->top].y + ch[i][1];
-            //å¦‚æœå®ƒçš„åæ ‡æ²¡æœ‰è¶…å‡ºèŒƒå›´ï¼Œå¹¶ä¸”æ²¡æœ‰èµ°è¿‡ï¼Œåˆ™æŠŠè¯¥è·¯çº¿å­˜å…¥è·¯å¾„æ ˆ
-            if (t.x >= 0 && t.y >= 0 && t.x < N && t.y < M && !chess[t.y][t.x])
+            //Èç¹ûËüµÄ×ø±êÃ»ÓĞ³¬³ö·¶Î§£¬²¢ÇÒÃ»ÓĞ×ß¹ı£¬Ôò°Ñ¸ÃÂ·Ïß´æÈëÂ·¾¶Õ»
+            if (t.x >= 0 && t.y >= 0 && t.x < COL && t.y < ROW && !chess[t.y][t.x])
             {
                 if (flag)
-                { //æ²¡æœ‰é€€å›å»
+                { //Ã»ÓĞÍË»ØÈ¥
                     Push(s, t);
                     chess[t.y][t.x] = s->top + 1;
                     s->p[s->top - 1].flag = i;
@@ -106,15 +86,15 @@ void Judge(LNode *s, int chess[][N])
                     break;
                 }
                 else
-                { //é€€å›å»äº†
+                {
                     if (s->p[s->top].flag < i)
-                    { //é‡æ–°èµ°æ—¶ï¼Œè®©å®ƒçš„æ–¹å‘ä¸ç­‰äºåŸå…ˆçš„æ–¹å‘
+                    { //ÖØĞÂ×ßÊ±£¬ÈÃËüµÄ·½Ïò²»µÈÓÚÔ­ÏÈµÄ·½Ïò
                         flag = 1;
                     }
                 }
             }
         }
-        //å¦‚æœæ²¡æœ‰èƒ½èµ°çš„è·¯æ—¶ï¼Œå³ï¼Œæ‰€æœ‰çš„è·¯å¾„éƒ½è¶…å‡ºèŒƒå›´ï¼Œæˆ–è€…ï¼Œè¯¥ä½ç½®å·²ç»èµ°è¿‡äº†ï¼Œåˆ™ï¼Œé€€åˆ°ä¸Šä¸€æ­¥ï¼Œé‡æ–°é€‰æ‹©ï¼›
+        //ÍËµ½ÉÏÒ»²½
         if (i == 8)
         {
 
@@ -124,31 +104,23 @@ void Judge(LNode *s, int chess[][N])
         }
     }
 }
-void Push(LNode *s, stack x)
+void Push(struct node *s, struct weizhi x)
 {
-    if (IsFull(s))
-    {
-        printf("æ ˆä¸Šæº¢ï¼Œä¸èƒ½è¿›è¡Œå…¥æ ˆæ“ä½œ!\n");
-        exit(0);
-    }
-    else
-    {
-        s->top++;
-        s->p[s->top] = x;
-    }
+    s->top++;
+    s->p[s->top] = x;
 }
-void Pop(LNode *s)
+void Pop(struct node *s)
 {
-    if (IsEmpty(s))
+    if (Empty(s))
     {
-        printf("æ ˆä¸ºç©ºï¼Œä¸èƒ½è¿›è¡Œå‡ºæ ˆæ“ä½œ!\n");
+        printf("Õ»Îª¿Õ£¬²»ÄÜ½øĞĞ³öÕ»²Ù×÷!\n");
         exit(0);
     }
     s->top--;
 }
-int IsFull(LNode *s)
+int Full(struct node *s)
 {
-    if (s->top >= M * N)
+    if (s->top >= ROW * COL)
     {
         return 1;
     }
@@ -157,7 +129,7 @@ int IsFull(LNode *s)
         return 0;
     }
 }
-int IsEmpty(LNode *s)
+int Empty(struct node *s)
 {
     if (s->top == -1)
     {
